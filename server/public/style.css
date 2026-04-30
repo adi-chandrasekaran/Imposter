@@ -1,48 +1,110 @@
 body {
   margin: 0;
-  font-family: sans-serif;
-  background: linear-gradient(135deg, #3b0a6b, #1a0f3c);
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+  background: #1a1a1a;
   color: white;
-  text-align: center;
 }
 
+/* BACKGROUND BLOBS */
+.bg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 30%, #3EC1B6, transparent 40%),
+              radial-gradient(circle at 80% 70%, #F25F5C, transparent 40%),
+              radial-gradient(circle at 50% 90%, #F4A259, transparent 40%);
+  filter: blur(80px);
+  z-index: -1;
+  animation: float 10s infinite alternate ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-40px); }
+}
+
+/* CENTER EVERYTHING */
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* SCREEN TRANSITION */
 .screen {
   display: none;
-  padding: 20px;
+  opacity: 0;
+  transition: all 0.4s ease;
 }
 
-.active {
-  display: block;
+.screen.active {
+  display: flex;
+  opacity: 1;
 }
 
-input, select, button {
-  width: 90%;
-  padding: 12px;
+/* INPUTS */
+input, select {
+  width: 280px;
+  padding: 14px;
   margin: 10px;
   border-radius: 12px;
   border: none;
   font-size: 16px;
 }
 
+/* BUTTONS */
 button {
-  background: #6c5ce7;
+  width: 280px;
+  padding: 14px;
+  margin: 10px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  background: linear-gradient(135deg, #3EC1B6, #355F5C);
   color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
+button:hover {
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* HOLD BUTTON */
 #holdBtn {
-  height: 150px;
-  font-size: 24px;
-  background: #00cec9;
+  height: 120px;
+  font-size: 22px;
+  background: linear-gradient(135deg, #F4A259, #F25F5C);
 }
 
+/* WORD DISPLAY */
 #wordDisplay {
-  margin-top: 30px;
-  font-size: 40px;
+  font-size: 48px;
+  margin: 20px;
+  transition: all 0.3s ease;
 }
 
+/* PLAYER TAGS */
 .playerTag {
-  background: #2d2a5a;
-  padding: 10px;
-  margin: 5px;
+  background: rgba(255,255,255,0.1);
+  padding: 8px 16px;
+  margin: 6px;
   border-radius: 10px;
+}
+
+/* EXIT BUTTON */
+.exitBtn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: auto;
+  padding: 10px 20px;
+  background: #D7263D;
 }

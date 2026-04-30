@@ -8,16 +8,20 @@
 
 <body>
 
+<div class="bg"></div>
+
 <div id="app">
 
+  <button class="exitBtn" onclick="exitGame()">EXIT</button>
+
   <!-- SETUP -->
-  <div id="setup" class="screen active">
+  <div id="setup" class="screen active center">
     <h1>Imposter Who</h1>
 
     <select id="language">
-      <option value="english">English</option>
-      <option value="spanish">Spanish</option>
-      <option value="french">French</option>
+      <option>English</option>
+      <option>Spanish</option>
+      <option>French</option>
     </select>
 
     <input id="word" placeholder="Enter secret word">
@@ -27,7 +31,7 @@
   </div>
 
   <!-- PLAYERS -->
-  <div id="playersScreen" class="screen">
+  <div id="playersScreen" class="screen center">
     <h2>Enter Players</h2>
 
     <div id="playersList"></div>
@@ -39,7 +43,7 @@
   </div>
 
   <!-- PASS PHONE -->
-  <div id="passScreen" class="screen">
+  <div id="passScreen" class="screen center">
     <h2 id="currentPlayer"></h2>
 
     <button 
@@ -57,8 +61,8 @@
     <button onclick="nextPlayer()">Next Player</button>
   </div>
 
-  <!-- START PLAYER -->
-  <div id="startScreen" class="screen">
+  <!-- START -->
+  <div id="startScreen" class="screen center">
     <h1 id="starter"></h1>
     <p>Start describing!</p>
   </div>

@@ -106,3 +106,7 @@ function pickStarter() {
 
   show("startScreen");
 }
+
+function exitGame() {
+  location.reload();
+}
