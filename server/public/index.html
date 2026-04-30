@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Imposter Game</title>
+  <title>Imposter Who</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,20 +10,9 @@
 
 <div id="app">
 
-  <!-- LOBBY -->
-  <div id="lobby" class="screen active">
-    <h1>Imposter Game</h1>
-
-    <input id="name" placeholder="Your name">
-    <input id="room" placeholder="Room Code">
-
-    <button onclick="createRoom()">Create (Host)</button>
-    <button onclick="joinRoom()">Join</button>
-
-    <h3>Game Settings (Host only)</h3>
-
-    <input id="word" placeholder="Enter word">
-    <input id="imposters" type="number" value="1" min="1">
+  <!-- SETUP -->
+  <div id="setup" class="screen active">
+    <h1>Imposter Who</h1>
 
     <select id="language">
       <option value="english">English</option>
@@ -31,39 +20,51 @@
       <option value="french">French</option>
     </select>
 
-    <button onclick="startGame()">Start Game</button>
+    <input id="word" placeholder="Enter secret word">
+    <input id="imposters" type="number" value="1" min="1">
 
-    <div id="players"></div>
+    <button onclick="goToPlayers()">Next</button>
   </div>
 
-  <!-- WORD -->
-  <div id="wordScreen" class="screen">
-    <div class="card">
-      <h2 id="wordDisplay"></h2>
-    </div>
-  </div>
+  <!-- PLAYERS -->
+  <div id="playersScreen" class="screen">
+    <h2>Enter Players</h2>
 
-  <!-- DESCRIPTION -->
-  <div id="descScreen" class="screen">
-    <div id="descList"></div>
-
-    <div class="descBox">
-      <input id="descInput" placeholder="Describe...">
-      <button onclick="submitDesc()">Submit</button>
-    </div>
-  </div>
-
-  <!-- VOTING -->
-  <div id="voteScreen" class="screen">
-    <h2>Vote</h2>
     <div id="playersList"></div>
-    <button onclick="sendVote()">Submit Vote</button>
-    <button onclick="endVote()">End Voting</button>
+
+    <input id="playerName" placeholder="Player name">
+    <button onclick="addPlayer()">Add Player</button>
+
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <!-- PASS PHONE -->
+  <div id="passScreen" class="screen">
+    <h2 id="currentPlayer"></h2>
+
+    <button 
+      id="holdBtn"
+      onmousedown="revealWord()"
+      onmouseup="hideWord()"
+      ontouchstart="revealWord()"
+      ontouchend="hideWord()"
+    >
+      HOLD TO SEE
+    </button>
+
+    <h1 id="wordDisplay"></h1>
+
+    <button onclick="nextPlayer()">Next Player</button>
+  </div>
+
+  <!-- START PLAYER -->
+  <div id="startScreen" class="screen">
+    <h1 id="starter"></h1>
+    <p>Start describing!</p>
   </div>
 
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script src="script.js"></script>
 
 </body>
