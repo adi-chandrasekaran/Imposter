@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Imposter Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- LOBBY -->
+  <div id="lobby" class="screen active">
+    <h1>Imposter Game</h1>
+
+    <input id="name" placeholder="Your name">
+    <input id="room" placeholder="Room Code">
+
+    <button onclick="createRoom()">Create (Host)</button>
+    <button onclick="joinRoom()">Join</button>
+
+    <h3>Game Settings (Host only)</h3>
+
+    <input id="word" placeholder="Enter word">
+    <input id="imposters" type="number" value="1" min="1">
+
+    <select id="language">
+      <option value="english">English</option>
+      <option value="spanish">Spanish</option>
+      <option value="french">French</option>
+    </select>
+
+    <button onclick="startGame()">Start Game</button>
+
+    <div id="players"></div>
+  </div>
+
+  <!-- WORD -->
+  <div id="wordScreen" class="screen">
+    <div class="card">
+      <h2 id="wordDisplay"></h2>
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div id="descScreen" class="screen">
+    <div id="descList"></div>
+
+    <div class="descBox">
+      <input id="descInput" placeholder="Describe...">
+      <button onclick="submitDesc()">Submit</button>
+    </div>
+  </div>
+
+  <!-- VOTING -->
+  <div id="voteScreen" class="screen">
+    <h2>Vote</h2>
+    <div id="playersList"></div>
+    <button onclick="sendVote()">Submit Vote</button>
+    <button onclick="endVote()">End Voting</button>
+  </div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

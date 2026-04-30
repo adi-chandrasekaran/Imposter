@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: linear-gradient(135deg, #3b0a6b, #1a0f3c);
+    color: white;
+  }
+  
+  .screen {
+    display: none;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .active {
+    display: block;
+  }
+  
+  input, button, select {
+    width: 90%;
+    padding: 12px;
+    margin: 8px;
+    border-radius: 10px;
+    border: none;
+  }
+  
+  button {
+    background: #6c5ce7;
+    color: white;
+  }
+  
+  .card {
+    margin-top: 50px;
+    padding: 40px;
+    background: #1e1b3a;
+    border-radius: 20px;
+    font-size: 30px;
+  }
+  
+  .descBox {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #1e1b3a;
+    padding: 15px;
+  }
+  
+  #playersList button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+  }
