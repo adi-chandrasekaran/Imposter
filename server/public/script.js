@@ -208,8 +208,15 @@ function finishVoting() {
 
   // 🔴 CASE 2: NORMAL PLAYER ELIMINATED
   if (impostersLeft >= normalPlayersLeft) {
+
+    // 🔍 find remaining imposters
+    let imposterNames = players.filter((p, i) => assignments[i] === "IMPOSTER");
+  
     document.getElementById("resultText").innerText =
-      "IMPOSTERS WIN 😈";
+      "THERE ARE MORE IMPOSTERS THAN PLAYERS.\n\n" +
+      "IMPOSTERS WIN 😈\n\n" +
+      "Imposters were: " + imposterNames.join(", ");
+  
     document.getElementById("continueBtn").style.display = "none";
     return show("resultScreen");
   }
