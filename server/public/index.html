@@ -65,6 +65,23 @@
   <div id="startScreen" class="screen center">
     <h1 id="starter"></h1>
     <p>Start describing!</p>
+
+    <button onclick="goToVoting()">Go to Voting</button>
+  </div>
+
+  <!-- 🆕 VOTING SCREEN -->
+  <div id="voteScreen" class="screen center">
+    <h2 id="votingPlayer"></h2>
+    <div id="voteGrid"></div>
+
+    <button onclick="submitVote()">Submit Vote</button>
+  </div>
+
+  <!-- 🆕 RESULT SCREEN -->
+  <div id="resultScreen" class="screen center">
+    <h1 id="resultText"></h1>
+
+    <button id="continueBtn" onclick="continueRound()">CONTINUE ROUND</button>
   </div>
 
 </div>

@@ -4,13 +4,19 @@ let currentIndex = 0;
 let word = "";
 let imposters = 1;
 
+// 🆕 voting state
+let votes = {};
+let votingTurnIndex = 0;
+let voteCounts = {};
+let starterIndex = 0;
+
 // SCREEN SWITCH
 function show(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// GO TO PLAYER ENTRY
+// SETUP → PLAYERS
 function goToPlayers() {
   word = document.getElementById("word").value;
   imposters = parseInt(document.getElementById("imposters").value);
@@ -26,22 +32,18 @@ function goToPlayers() {
 // ADD PLAYER
 function addPlayer() {
   const name = document.getElementById("playerName").value;
-
   if (!name) return;
 
   players.push(name);
   document.getElementById("playerName").value = "";
-
   renderPlayers();
 }
 
 function renderPlayers() {
   let html = "";
-
   players.forEach(p => {
     html += `<div class="playerTag">${p}</div>`;
   });
-
   document.getElementById("playersList").innerHTML = html;
 }
 
@@ -52,7 +54,6 @@ function startGame() {
     return;
   }
 
-  // assign imposters
   assignments = [...players].map(() => word);
 
   let shuffled = [...players]
@@ -69,23 +70,20 @@ function startGame() {
   updatePlayer();
 }
 
-// UPDATE CURRENT PLAYER
+// PASS PHONE FLOW
 function updatePlayer() {
   document.getElementById("currentPlayer").innerText = players[currentIndex];
   document.getElementById("wordDisplay").innerText = "";
 }
 
-// HOLD TO SEE
 function revealWord() {
-  document.getElementById("wordDisplay").innerText =
-    assignments[currentIndex];
+  document.getElementById("wordDisplay").innerText = assignments[currentIndex];
 }
 
 function hideWord() {
   document.getElementById("wordDisplay").innerText = "";
 }
 
-// NEXT PLAYER
 function nextPlayer() {
   currentIndex++;
 
@@ -97,16 +95,128 @@ function nextPlayer() {
   updatePlayer();
 }
 
-// PICK RANDOM STARTER
+// RANDOM STARTER
 function pickStarter() {
-  let random = players[Math.floor(Math.random() * players.length)];
+  starterIndex = Math.floor(Math.random() * players.length);
 
   document.getElementById("starter").innerText =
-    random + " starts!";
+    players[starterIndex] + " starts!";
 
   show("startScreen");
 }
 
+// =========================
+// 🔥 VOTING SYSTEM
+// =========================
+
+function goToVoting() {
+  votes = {};
+  voteCounts = {};
+  votingTurnIndex = 0;
+
+  players.forEach(p => voteCounts[p] = 0);
+
+  renderVoting();
+  show("voteScreen");
+}
+
+function renderVoting() {
+  let currentVoter = players[votingTurnIndex];
+
+  document.getElementById("votingPlayer").innerText =
+    currentVoter + " vote";
+
+  let html = "";
+
+  players.forEach(p => {
+    let dots = "⚪".repeat(voteCounts[p]);
+
+    html += `
+      <div 
+        class="voteBox" 
+        onclick="castVote('${p}')"
+      >
+        ${p}
+        <div>${dots}</div>
+      </div>
+    `;
+  });
+
+  document.getElementById("voteGrid").innerHTML = html;
+}
+
+// CLICK = INSTANT VOTE
+function castVote(target) {
+  let voter = players[votingTurnIndex];
+
+  votes[voter] = target;
+  voteCounts[target]++;
+
+  // next voter
+  votingTurnIndex++;
+
+  if (votingTurnIndex >= players.length) {
+    finishVoting();
+    return;
+  }
+
+  renderVoting();
+}
+
+// FINAL SUBMIT (ALL DONE)
+function finishVoting() {
+  let max = Math.max(...Object.values(voteCounts));
+  let top = Object.keys(voteCounts).filter(p => voteCounts[p] === max);
+
+  if (top.length > 1) {
+    document.getElementById("resultText").innerText = "TIE";
+    document.getElementById("continueBtn").style.display = "block";
+
+    show("resultScreen");
+    return;
+  }
+
+  let eliminated = top[0];
+  let index = players.indexOf(eliminated);
+
+  let isImposter = assignments[index] === "IMPOSTER";
+
+  if (isImposter) {
+    document.getElementById("resultText").innerText =
+      eliminated + " was the IMPOSTER — IMPOSTER LOSES!";
+    
+    document.getElementById("continueBtn").style.display = "none";
+  } else {
+    document.getElementById("resultText").innerText =
+      eliminated + " was NOT the imposter";
+
+    document.getElementById("continueBtn").style.display = "block";
+  }
+
+  show("resultScreen");
+}
+
+// CONTINUE ROUND
+function continueRound() {
+  // remove eliminated player
+  let max = Math.max(...Object.values(voteCounts));
+  let eliminated = Object.keys(voteCounts).find(p => voteCounts[p] === max);
+
+  let index = players.indexOf(eliminated);
+
+  players.splice(index, 1);
+  assignments.splice(index, 1);
+
+  // rotate starter
+  starterIndex = (starterIndex + 1) % players.length;
+
+  document.getElementById("starter").innerText =
+    players[starterIndex] + " starts!";
+
+  show("startScreen");
+}
+
+// EXIT
 function exitGame() {
   location.reload();
 }

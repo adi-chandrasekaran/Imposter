@@ -108,3 +108,17 @@ button:active {
   padding: 10px 20px;
   background: #D7263D;
 }
+
+.voteBox {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  margin: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+#voteGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
