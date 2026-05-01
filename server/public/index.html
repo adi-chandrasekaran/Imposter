@@ -18,13 +18,33 @@
   <div id="setup" class="screen active center">
     <h1>Imposter Who</h1>
 
+    <!-- 🔥 LANGUAGE -->
     <select id="language">
       <option>English</option>
       <option>Spanish</option>
       <option>French</option>
     </select>
 
+    <!-- 🔥 WORD INPUT -->
     <input id="word" placeholder="Enter secret word">
+
+    <!-- 🔥 RANDOM BUTTON -->
+    <button onclick="toggleRandom()">Randomise Word</button>
+
+    <!-- 🔥 DROPDOWN (hidden initially) -->
+    <select id="categorySelect" style="display:none" onchange="selectRandomCategory()">
+      <option disabled selected>Select Category</option>
+      <option>Movies</option>
+      <option>Food</option>
+      <option>Brands</option>
+      <option>FamousPeople</option>
+      <option>Countries</option>
+      <option>Books</option>
+      <option>TVShows</option>
+    </select>
+
+    <p id="randomStatus"></p>
+
     <input id="imposters" type="number" value="1" min="1">
 
     <button onclick="goToPlayers()">Next</button>
@@ -69,15 +89,13 @@
     <button onclick="goToVoting()">Go to Voting</button>
   </div>
 
-  <!-- 🆕 VOTING SCREEN -->
+  <!-- VOTING -->
   <div id="voteScreen" class="screen center">
     <h2 id="votingPlayer"></h2>
     <div id="voteGrid"></div>
-
-    <button onclick="submitVote()">Submit Vote</button>
   </div>
 
-  <!-- 🆕 RESULT SCREEN -->
+  <!-- RESULT -->
   <div id="resultScreen" class="screen center">
     <h1 id="resultText"></h1>
 
