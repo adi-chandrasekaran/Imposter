@@ -4,7 +4,7 @@ let currentIndex = 0;
 let word = "";
 let imposters = 1;
 
-// 🆕 voting state
+// voting state
 let votes = {};
 let votingTurnIndex = 0;
 let voteCounts = {};
@@ -16,7 +16,7 @@ function show(id) {
   document.getElementById(id).classList.add("active");
 }
 
-// SETUP → PLAYERS
+// GO TO PLAYER ENTRY
 function goToPlayers() {
   word = document.getElementById("word").value;
   imposters = parseInt(document.getElementById("imposters").value);
@@ -32,18 +32,22 @@ function goToPlayers() {
 // ADD PLAYER
 function addPlayer() {
   const name = document.getElementById("playerName").value;
+
   if (!name) return;
 
   players.push(name);
   document.getElementById("playerName").value = "";
+
   renderPlayers();
 }
 
 function renderPlayers() {
   let html = "";
+
   players.forEach(p => {
     html += `<div class="playerTag">${p}</div>`;
   });
+
   document.getElementById("playersList").innerHTML = html;
 }
 
@@ -70,20 +74,23 @@ function startGame() {
   updatePlayer();
 }
 
-// PASS PHONE FLOW
+// UPDATE CURRENT PLAYER
 function updatePlayer() {
   document.getElementById("currentPlayer").innerText = players[currentIndex];
   document.getElementById("wordDisplay").innerText = "";
 }
 
+// HOLD TO SEE
 function revealWord() {
-  document.getElementById("wordDisplay").innerText = assignments[currentIndex];
+  document.getElementById("wordDisplay").innerText =
+    assignments[currentIndex];
 }
 
 function hideWord() {
   document.getElementById("wordDisplay").innerText = "";
 }
 
+// NEXT PLAYER
 function nextPlayer() {
   currentIndex++;
 
@@ -95,7 +102,7 @@ function nextPlayer() {
   updatePlayer();
 }
 
-// RANDOM STARTER
+// PICK RANDOM STARTER
 function pickStarter() {
   starterIndex = Math.floor(Math.random() * players.length);
 
@@ -132,10 +139,7 @@ function renderVoting() {
     let dots = "⚪".repeat(voteCounts[p]);
 
     html += `
-      <div 
-        class="voteBox" 
-        onclick="castVote('${p}')"
-      >
+      <div class="voteBox" onclick="castVote('${p}')">
         ${p}
         <div>${dots}</div>
       </div>
@@ -152,7 +156,6 @@ function castVote(target) {
   votes[voter] = target;
   voteCounts[target]++;
 
-  // next voter
   votingTurnIndex++;
 
   if (votingTurnIndex >= players.length) {
@@ -163,14 +166,23 @@ function castVote(target) {
   renderVoting();
 }
 
-// FINAL SUBMIT (ALL DONE)
+// =========================
+// 🔥 RESULTS LOGIC
+// =========================
+
 function finishVoting() {
   let max = Math.max(...Object.values(voteCounts));
   let top = Object.keys(voteCounts).filter(p => voteCounts[p] === max);
 
-  // 🔵 TIE → NO ELIMINATION
+  // 🟦 TIE
   if (top.length > 1) {
-    document.getElementById("resultText").innerText = "TIE — NO ONE ELIMINATED";
+    document.getElementById("resultText").innerHTML = `
+      <div class="resultBox">
+        <h1>TIE</h1>
+        <p>No one was eliminated</p>
+      </div>
+    `;
+
     document.getElementById("continueBtn").style.display = "block";
     show("resultScreen");
     return;
@@ -180,49 +192,67 @@ function finishVoting() {
   let index = players.indexOf(eliminated);
   let isImposter = assignments[index] === "IMPOSTER";
 
-  // 🟡 REMOVE PLAYER ONLY IF NOT TIE
+  // remove player
   players.splice(index, 1);
   assignments.splice(index, 1);
 
-  // count imposters left
   let impostersLeft = assignments.filter(a => a === "IMPOSTER").length;
   let normalPlayersLeft = assignments.length - impostersLeft;
 
-  // 🟢 CASE 1: IMPOSTER ELIMINATED
+  // 🟩 IMPOSTER ELIMINATED
   if (isImposter) {
 
     if (impostersLeft === 0) {
-      document.getElementById("resultText").innerText =
-        eliminated + " was the IMPOSTER — ALL IMPOSTERS ELIMINATED! YOU WIN!";
+      document.getElementById("resultText").innerHTML = `
+        <div class="resultBox">
+          <h1>${eliminated} was the IMPOSTER</h1>
+          <h2>ALL IMPOSTERS ELIMINATED</h2>
+          <p>YOU WIN</p>
+        </div>
+      `;
+
       document.getElementById("continueBtn").style.display = "none";
-      return show("resultScreen");
+      show("resultScreen");
+      return;
     }
 
-    document.getElementById("resultText").innerText =
-      eliminated + " was an IMPOSTER...\nBUT WAIT! THERE'S STILL AN IMPOSTER AMONG YOU!";
-    
+    document.getElementById("resultText").innerHTML = `
+      <div class="resultBox">
+        <h1>${eliminated} was an IMPOSTER</h1>
+        <h2>BUT WAIT</h2>
+        <p>There is still an imposter among you</p>
+      </div>
+    `;
+
     document.getElementById("continueBtn").style.display = "block";
     show("resultScreen");
     return;
   }
 
-  // 🔴 CASE 2: NORMAL PLAYER ELIMINATED
+  // 🟥 IMPOSTERS WIN
   if (impostersLeft >= normalPlayersLeft) {
 
-    // 🔍 find remaining imposters
     let imposterNames = players.filter((p, i) => assignments[i] === "IMPOSTER");
-  
-    document.getElementById("resultText").innerText =
-      "THERE ARE MORE IMPOSTERS THAN PLAYERS.\n\n" +
-      "IMPOSTERS WIN 😈\n\n" +
-      "Imposters were: " + imposterNames.join(", ");
-  
+
+    document.getElementById("resultText").innerHTML = `
+      <div class="resultBox">
+        <h2>There are more imposters than players</h2>
+        <h1>IMPOSTERS WIN</h1>
+        <p>Imposters were: ${imposterNames.join(", ")}</p>
+      </div>
+    `;
+
     document.getElementById("continueBtn").style.display = "none";
-    return show("resultScreen");
+    show("resultScreen");
+    return;
   }
 
-  document.getElementById("resultText").innerText =
-    eliminated + " was NOT the imposter";
+  // 🟨 NORMAL PLAYER ELIMINATED
+  document.getElementById("resultText").innerHTML = `
+    <div class="resultBox">
+      <h1>${eliminated} was NOT the imposter</h1>
+    </div>
+  `;
 
   document.getElementById("continueBtn").style.display = "block";
   show("resultScreen");
@@ -230,7 +260,6 @@ function finishVoting() {
 
 // CONTINUE ROUND
 function continueRound() {
-  // rotate starter
   starterIndex = (starterIndex + 1) % players.length;
 
   document.getElementById("starter").innerText =

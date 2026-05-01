@@ -122,3 +122,38 @@ button:active {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
+
+resultBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  text-align: center;
+  width: 100%;
+}
+
+.resultBox h1 {
+  font-size: 48px;
+  margin: 0;
+}
+
+.resultBox h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.resultBox p {
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+.resultBox {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
