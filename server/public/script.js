@@ -168,45 +168,61 @@ function finishVoting() {
   let max = Math.max(...Object.values(voteCounts));
   let top = Object.keys(voteCounts).filter(p => voteCounts[p] === max);
 
+  // 🔵 TIE → NO ELIMINATION
   if (top.length > 1) {
-    document.getElementById("resultText").innerText = "TIE";
+    document.getElementById("resultText").innerText = "TIE — NO ONE ELIMINATED";
     document.getElementById("continueBtn").style.display = "block";
-
     show("resultScreen");
     return;
   }
 
   let eliminated = top[0];
   let index = players.indexOf(eliminated);
-
   let isImposter = assignments[index] === "IMPOSTER";
 
-  if (isImposter) {
-    document.getElementById("resultText").innerText =
-      eliminated + " was the IMPOSTER — IMPOSTER LOSES!";
-    
-    document.getElementById("continueBtn").style.display = "none";
-  } else {
-    document.getElementById("resultText").innerText =
-      eliminated + " was NOT the imposter";
+  // 🟡 REMOVE PLAYER ONLY IF NOT TIE
+  players.splice(index, 1);
+  assignments.splice(index, 1);
 
+  // count imposters left
+  let impostersLeft = assignments.filter(a => a === "IMPOSTER").length;
+  let normalPlayersLeft = assignments.length - impostersLeft;
+
+  // 🟢 CASE 1: IMPOSTER ELIMINATED
+  if (isImposter) {
+
+    if (impostersLeft === 0) {
+      document.getElementById("resultText").innerText =
+        eliminated + " was the IMPOSTER — ALL IMPOSTERS ELIMINATED! YOU WIN!";
+      document.getElementById("continueBtn").style.display = "none";
+      return show("resultScreen");
+    }
+
+    document.getElementById("resultText").innerText =
+      eliminated + " was an IMPOSTER...\nBUT WAIT! THERE'S STILL AN IMPOSTER AMONG YOU!";
+    
     document.getElementById("continueBtn").style.display = "block";
+    show("resultScreen");
+    return;
   }
 
+  // 🔴 CASE 2: NORMAL PLAYER ELIMINATED
+  if (impostersLeft >= normalPlayersLeft) {
+    document.getElementById("resultText").innerText =
+      "IMPOSTERS WIN 😈";
+    document.getElementById("continueBtn").style.display = "none";
+    return show("resultScreen");
+  }
+
+  document.getElementById("resultText").innerText =
+    eliminated + " was NOT the imposter";
+
+  document.getElementById("continueBtn").style.display = "block";
   show("resultScreen");
 }
 
 // CONTINUE ROUND
 function continueRound() {
-  // remove eliminated player
-  let max = Math.max(...Object.values(voteCounts));
-  let eliminated = Object.keys(voteCounts).find(p => voteCounts[p] === max);
-
-  let index = players.indexOf(eliminated);
-
-  players.splice(index, 1);
-  assignments.splice(index, 1);
-
   // rotate starter
   starterIndex = (starterIndex + 1) % players.length;
 
