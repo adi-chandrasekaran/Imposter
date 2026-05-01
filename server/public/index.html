@@ -24,7 +24,12 @@
       <option>French</option>
     </select>
 
+    <!-- WORD INPUT + RANDOM -->
     <input id="word" placeholder="Enter secret word">
+
+    <button onclick="randomizeWord()">Randomise Word</button>
+    <p id="randomStatus"></p>
+
     <input id="imposters" type="number" value="1" min="1">
 
     <button onclick="goToPlayers()">Next</button>
@@ -69,15 +74,13 @@
     <button onclick="goToVoting()">Go to Voting</button>
   </div>
 
-  <!-- 🆕 VOTING SCREEN -->
+  <!-- VOTING -->
   <div id="voteScreen" class="screen center">
     <h2 id="votingPlayer"></h2>
     <div id="voteGrid"></div>
-
-    <button onclick="submitVote()">Submit Vote</button>
   </div>
 
-  <!-- 🆕 RESULT SCREEN -->
+  <!-- RESULT -->
   <div id="resultScreen" class="screen center">
     <h1 id="resultText"></h1>
 

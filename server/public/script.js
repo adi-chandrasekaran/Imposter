@@ -4,6 +4,52 @@ let currentIndex = 0;
 let word = "";
 let imposters = 1;
 
+// RANDOM WORD SYSTEM
+let randomMode = false;
+
+const wordBank = {
+
+  English: [
+    "apple","beach","car","dog","pizza","school","phone","tree","coffee","music",
+    "river","mountain","city","forest","ocean","cloud","rain","storm","sun","moon",
+    "star","light","shadow","fire","ice","snow","wind","flower","grass","leaf",
+    "chair","table","window","door","bed","mirror","clock","book","pen","paper",
+    "teacher","student","doctor","artist","driver","chef","pilot","actor","singer","dancer",
+    "game","sport","ball","goal","race","jump","run","walk","climb","swim",
+    "cake","bread","cheese","butter","milk","egg","fruit","vegetable","soup","rice",
+    "train","plane","boat","bike","road","bridge","tower","castle","village","hotel",
+    "camera","photo","video","screen","keyboard","mouse","internet","code","robot","machine",
+    "family","friend","child","parent","brother","sister","love","smile","laugh","cry"
+  ],
+
+  Spanish: [
+    "manzana","playa","coche","perro","pizza","escuela","telefono","arbol","cafe","musica",
+    "rio","montana","ciudad","bosque","oceano","nube","lluvia","tormenta","sol","luna",
+    "estrella","luz","sombra","fuego","hielo","nieve","viento","flor","hierba","hoja",
+    "silla","mesa","ventana","puerta","cama","espejo","reloj","libro","boligrafo","papel",
+    "maestro","estudiante","doctor","artista","conductor","chef","piloto","actor","cantante","bailarin",
+    "juego","deporte","pelota","gol","carrera","salto","correr","caminar","escalar","nadar",
+    "pastel","pan","queso","mantequilla","leche","huevo","fruta","verdura","sopa","arroz",
+    "tren","avion","barco","bicicleta","carretera","puente","torre","castillo","pueblo","hotel",
+    "camara","foto","video","pantalla","teclado","raton","internet","codigo","robot","maquina",
+    "familia","amigo","nino","padre","hermano","hermana","amor","sonrisa","risa","llorar"
+  ],
+
+  French: [
+    "pomme","plage","voiture","chien","pizza","ecole","telephone","arbre","cafe","musique",
+    "riviere","montagne","ville","foret","ocean","nuage","pluie","tempete","soleil","lune",
+    "etoile","lumiere","ombre","feu","glace","neige","vent","fleur","herbe","feuille",
+    "chaise","table","fenetre","porte","lit","miroir","horloge","livre","stylo","papier",
+    "professeur","etudiant","docteur","artiste","conducteur","chef","pilote","acteur","chanteur","danseur",
+    "jeu","sport","balle","but","course","saut","courir","marcher","escalader","nager",
+    "gateau","pain","fromage","beurre","lait","oeuf","fruit","legume","soupe","riz",
+    "train","avion","bateau","velo","route","pont","tour","chateau","village","hotel",
+    "camera","photo","video","ecran","clavier","souris","internet","code","robot","machine",
+    "famille","ami","enfant","parent","frere","soeur","amour","sourire","rire","pleurer"
+  ]
+
+};
+
 // voting state
 let votes = {};
 let votingTurnIndex = 0;
@@ -16,13 +62,31 @@ function show(id) {
   document.getElementById(id).classList.add("active");
 }
 
+// RANDOM WORD BUTTON
+function randomizeWord() {
+  const language = document.getElementById("language").value;
+
+  const words = wordBank[language];
+  word = words[Math.floor(Math.random() * words.length)];
+
+  randomMode = true;
+
+  document.getElementById("word").value = "";
+  document.getElementById("word").placeholder = "Random word selected";
+  document.getElementById("randomStatus").innerText = "Done";
+}
+
 // GO TO PLAYER ENTRY
 function goToPlayers() {
-  word = document.getElementById("word").value;
+
+  if (!randomMode) {
+    word = document.getElementById("word").value;
+  }
+
   imposters = parseInt(document.getElementById("imposters").value);
 
   if (!word) {
-    alert("Enter a word");
+    alert("Enter a word or randomise one");
     return;
   }
 
@@ -113,7 +177,7 @@ function pickStarter() {
 }
 
 // =========================
-// 🔥 VOTING SYSTEM
+// VOTING SYSTEM
 // =========================
 
 function goToVoting() {
@@ -149,7 +213,6 @@ function renderVoting() {
   document.getElementById("voteGrid").innerHTML = html;
 }
 
-// CLICK = INSTANT VOTE
 function castVote(target) {
   let voter = players[votingTurnIndex];
 
@@ -167,21 +230,16 @@ function castVote(target) {
 }
 
 // =========================
-// 🔥 RESULTS LOGIC
+// RESULTS
 // =========================
 
 function finishVoting() {
   let max = Math.max(...Object.values(voteCounts));
   let top = Object.keys(voteCounts).filter(p => voteCounts[p] === max);
 
-  // 🟦 TIE
   if (top.length > 1) {
-    document.getElementById("resultText").innerHTML = `
-      <div class="resultBox">
-        <h1>TIE</h1>
-        <p>No one was eliminated</p>
-      </div>
-    `;
+    document.getElementById("resultText").innerHTML =
+      "TIE - No one eliminated";
 
     document.getElementById("continueBtn").style.display = "block";
     show("resultScreen");
@@ -192,67 +250,45 @@ function finishVoting() {
   let index = players.indexOf(eliminated);
   let isImposter = assignments[index] === "IMPOSTER";
 
-  // remove player
   players.splice(index, 1);
   assignments.splice(index, 1);
 
   let impostersLeft = assignments.filter(a => a === "IMPOSTER").length;
   let normalPlayersLeft = assignments.length - impostersLeft;
 
-  // 🟩 IMPOSTER ELIMINATED
   if (isImposter) {
 
     if (impostersLeft === 0) {
-      document.getElementById("resultText").innerHTML = `
-        <div class="resultBox">
-          <h1>${eliminated} was the IMPOSTER</h1>
-          <h2>ALL IMPOSTERS ELIMINATED</h2>
-          <p>YOU WIN</p>
-        </div>
-      `;
+      document.getElementById("resultText").innerHTML =
+        `${eliminated} was the IMPOSTER — ALL IMPOSTERS ELIMINATED — YOU WIN`;
 
       document.getElementById("continueBtn").style.display = "none";
       show("resultScreen");
       return;
     }
 
-    document.getElementById("resultText").innerHTML = `
-      <div class="resultBox">
-        <h1>${eliminated} was an IMPOSTER</h1>
-        <h2>BUT WAIT</h2>
-        <p>There is still an imposter among you</p>
-      </div>
-    `;
+    document.getElementById("resultText").innerHTML =
+      `${eliminated} was an IMPOSTER — BUT THERE IS STILL ONE AMONG YOU`;
 
     document.getElementById("continueBtn").style.display = "block";
     show("resultScreen");
     return;
   }
 
-  // 🟥 IMPOSTERS WIN
   if (impostersLeft >= normalPlayersLeft) {
 
     let imposterNames = players.filter((p, i) => assignments[i] === "IMPOSTER");
 
-    document.getElementById("resultText").innerHTML = `
-      <div class="resultBox">
-        <h2>There are more imposters than players</h2>
-        <h1>IMPOSTERS WIN</h1>
-        <p>Imposters were: ${imposterNames.join(", ")}</p>
-      </div>
-    `;
+    document.getElementById("resultText").innerHTML =
+      `THERE ARE MORE IMPOSTERS THAN PLAYERS. IMPOSTERS WIN. Imposters were: ${imposterNames.join(", ")}`;
 
     document.getElementById("continueBtn").style.display = "none";
     show("resultScreen");
     return;
   }
 
-  // 🟨 NORMAL PLAYER ELIMINATED
-  document.getElementById("resultText").innerHTML = `
-    <div class="resultBox">
-      <h1>${eliminated} was NOT the imposter</h1>
-    </div>
-  `;
+  document.getElementById("resultText").innerHTML =
+    `${eliminated} was NOT the imposter`;
 
   document.getElementById("continueBtn").style.display = "block";
   show("resultScreen");
@@ -270,5 +306,6 @@ function continueRound() {
 
 // EXIT
 function exitGame() {
+  randomMode = false;
   location.reload();
 }
