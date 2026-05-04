@@ -1,3 +1,7 @@
+// =========================
+// ORIGINAL VARIABLES
+// =========================
+
 let players = [];
 let assignments = [];
 let currentIndex = 0;
@@ -11,10 +15,14 @@ let starterIndex = 0;
 
 let randomMode = false;
 
-// =========================
-// 🔥 WORD BANK
-// =========================
+// 🆕 ROUND SYSTEM
+let round = 1;
+let totalRounds = 1;
 
+
+// =========================
+// 🔥 WORD BANK (UNCHANGED)
+// =========================
 const wordBank = {
   English: {
 
@@ -192,7 +200,6 @@ const wordBank = {
   }
 };
 
-  
 
 // =========================
 // SCREEN SWITCH
@@ -202,6 +209,7 @@ function show(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
+
 
 // =========================
 // RANDOM WORD SYSTEM
@@ -230,12 +238,12 @@ function selectRandomCategory() {
   document.getElementById("categorySelect").style.display = "none";
 }
 
+
 // =========================
 // SETUP FLOW
 // =========================
 
 function goToPlayers() {
-
   if (!randomMode) {
     word = document.getElementById("word").value;
   }
@@ -250,8 +258,9 @@ function goToPlayers() {
   show("playersScreen");
 }
 
+
 // =========================
-// PLAYER SETUP
+// PLAYER SETUP (UPDATED)
 // =========================
 
 function addPlayer() {
@@ -265,18 +274,30 @@ function addPlayer() {
   renderPlayers();
 }
 
+// 🆕 REMOVE PLAYER
+function removePlayer(index) {
+  players.splice(index, 1);
+  renderPlayers();
+}
+
 function renderPlayers() {
   let html = "";
 
-  players.forEach(p => {
-    html += `<div class="playerTag">${p}</div>`;
+  players.forEach((p, i) => {
+    html += `
+      <div class="playerTag">
+        ${p}
+        <span onclick="removePlayer(${i})" style="margin-left:10px; cursor:pointer;">❌</span>
+      </div>
+    `;
   });
 
   document.getElementById("playersList").innerHTML = html;
 }
 
+
 // =========================
-// GAME START
+// GAME START (UPDATED)
 // =========================
 
 function startGame() {
@@ -284,6 +305,16 @@ function startGame() {
     alert("Need at least 3 players");
     return;
   }
+
+  // 🆕 ROUND CALCULATION
+  totalRounds = players.length - 3;
+  round = 1;
+
+  setupRound();
+}
+
+// 🆕 SETUP EACH ROUND
+function setupRound() {
 
   assignments = [...players].map(() => word);
 
@@ -301,12 +332,15 @@ function startGame() {
   updatePlayer();
 }
 
+
 // =========================
 // PASS PHONE
 // =========================
 
 function updatePlayer() {
-  document.getElementById("currentPlayer").innerText = players[currentIndex];
+  document.getElementById("currentPlayer").innerText =
+    players[currentIndex] + ` (Round ${round}/${totalRounds})`;
+
   document.getElementById("wordDisplay").innerText = "";
 }
 
@@ -330,6 +364,7 @@ function nextPlayer() {
   updatePlayer();
 }
 
+
 // =========================
 // START ROUND
 // =========================
@@ -343,8 +378,9 @@ function pickStarter() {
   show("startScreen");
 }
 
+
 // =========================
-// VOTING SYSTEM
+// VOTING SYSTEM (UNCHANGED)
 // =========================
 
 function goToVoting() {
@@ -396,8 +432,9 @@ function castVote(target) {
   renderVoting();
 }
 
+
 // =========================
-// RESULTS
+// RESULTS (UNCHANGED LOGIC)
 // =========================
 
 function finishVoting() {
@@ -498,9 +535,29 @@ function continueRound() {
 }
 
 // =========================
+// 🆕 RESTART SAME PLAYERS
+// =========================
+
+function restartSamePlayers() {
+  show("playersScreen");
+}
+
+
+// =========================
 // EXIT
 // =========================
 
-function exitGame() {
-  location.reload();
+function restartGame() {
+  // reset round/game state ONLY
+  round = 1;
+  assignments = [];
+  currentIndex = 0;
+  votes = {};
+  voteCounts = {};
+  votingTurnIndex = 0;
+
+  // KEEP players array intact
+
+  show("playersScreen");
 }
+

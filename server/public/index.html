@@ -12,26 +12,26 @@
 
 <div id="app">
 
-  <button class="exitBtn" onclick="exitGame()">EXIT</button>
+  <!-- 🔥 TOP BUTTONS -->
+  <div class="topButtons">
+    <button class="restartBtn" onclick="restartGame()">RESTART</button>
+    <button class="exitBtn" onclick="location.reload()">EXIT</button>
+  </div>
 
-  <!-- SETUP -->
+  <!-- ================= SETUP ================= -->
   <div id="setup" class="screen active center">
     <h1>Imposter Who</h1>
 
-    <!-- 🔥 LANGUAGE -->
     <select id="language">
       <option>English</option>
       <option>Spanish</option>
       <option>French</option>
     </select>
 
-    <!-- 🔥 WORD INPUT -->
     <input id="word" placeholder="Enter secret word">
 
-    <!-- 🔥 RANDOM BUTTON -->
     <button onclick="toggleRandom()">Randomise Word</button>
 
-    <!-- 🔥 DROPDOWN (hidden initially) -->
     <select id="categorySelect" style="display:none" onchange="selectRandomCategory()">
       <option disabled selected>Select Category</option>
       <option>Movies</option>
@@ -50,7 +50,7 @@
     <button onclick="goToPlayers()">Next</button>
   </div>
 
-  <!-- PLAYERS -->
+  <!-- ================= PLAYERS ================= -->
   <div id="playersScreen" class="screen center">
     <h2>Enter Players</h2>
 
@@ -62,7 +62,7 @@
     <button onclick="startGame()">Start Game</button>
   </div>
 
-  <!-- PASS PHONE -->
+  <!-- ================= PASS PHONE ================= -->
   <div id="passScreen" class="screen center">
     <h2 id="currentPlayer"></h2>
 
@@ -81,7 +81,7 @@
     <button onclick="nextPlayer()">Next Player</button>
   </div>
 
-  <!-- START -->
+  <!-- ================= START ROUND ================= -->
   <div id="startScreen" class="screen center">
     <h1 id="starter"></h1>
     <p>Start describing!</p>
@@ -89,17 +89,23 @@
     <button onclick="goToVoting()">Go to Voting</button>
   </div>
 
-  <!-- VOTING -->
+  <!-- ================= VOTING ================= -->
   <div id="voteScreen" class="screen center">
     <h2 id="votingPlayer"></h2>
     <div id="voteGrid"></div>
   </div>
 
-  <!-- RESULT -->
+  <!-- ================= RESULT ================= -->
   <div id="resultScreen" class="screen center">
-    <h1 id="resultText"></h1>
 
-    <button id="continueBtn" onclick="continueRound()">CONTINUE ROUND</button>
+    <!-- 🔥 IMPORTANT: container for animated result -->
+    <div id="resultText" class="resultBox"></div>
+
+    <!-- 🔥 Continue only shows when JS allows -->
+    <button id="continueBtn" onclick="continueRound()">
+      CONTINUE ROUND
+    </button>
+
   </div>
 
 </div>

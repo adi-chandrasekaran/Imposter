@@ -88,7 +88,6 @@ button:active {
 #wordDisplay {
   font-size: 48px;
   margin: 20px;
-  transition: all 0.3s ease;
 }
 
 /* PLAYER TAGS */
@@ -99,14 +98,23 @@ button:active {
   border-radius: 10px;
 }
 
-/* EXIT BUTTON */
-.exitBtn {
+/* TOP BUTTONS */
+.topButtons {
   position: fixed;
   top: 15px;
   right: 15px;
-  width: auto;
-  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.exitBtn {
   background: #D7263D;
+  padding: 10px 20px;
+}
+
+.restartBtn {
+  background: #3EC1B6;
+  padding: 10px 20px;
 }
 
 .voteBox {
@@ -123,34 +131,9 @@ button:active {
   gap: 10px;
 }
 
-resultBox {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-
-  text-align: center;
-  width: 100%;
-}
-
-.resultBox h1 {
-  font-size: 48px;
-  margin: 0;
-}
-
-.resultBox h2 {
-  font-size: 28px;
-  margin: 0;
-}
-
-.resultBox p {
-  font-size: 20px;
-  opacity: 0.9;
-}
-
 .resultBox {
   animation: fadeIn 0.5s ease;
+  text-align: center;
 }
 
 @keyframes fadeIn {
